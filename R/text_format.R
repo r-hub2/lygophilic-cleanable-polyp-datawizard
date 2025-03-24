@@ -6,7 +6,7 @@
 #' @param width Positive integer giving the target column width for wrapping
 #' lines in the output. Can be "auto", in which case it will select 90\% of the
 #' default width.
-#' @inheritParams data_rename
+#' @param pattern Regex pattern to remove from `text`.
 #' @param sep Separator.
 #' @param last Last separator.
 #' @param n The number of characters to find.
@@ -40,15 +40,6 @@
 #' @export
 text_format <- function(text, sep = ", ", last = " and ", width = NULL, enclose = NULL, ...) {
   text_wrap(text_concatenate(text, sep = sep, last = last, enclose = enclose), width = width)
-}
-
-## TODO Deprecate and remove alias later
-
-#' @rdname text_format
-#' @export
-format_text <- function(text, sep = ", ", last = " and ", width = NULL, enclose = NULL, ...) {
-  insight::format_warning("Function `format_text()` is deprecated and will be removed in a future release. Please use `text_format()` instead.") # nolint
-  text_format(text, sep = sep, last = last, width = width, enclose = enclose, ...)
 }
 
 #' @rdname text_format
@@ -109,7 +100,6 @@ text_paste <- function(text, text2 = NULL, sep = ", ", enclose = NULL, ...) {
     paste0(text, ifelse(text == "" | text2 == "", "", sep), text2) # nolint
   }
 }
-
 
 
 #' @rdname text_format

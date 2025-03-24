@@ -2,13 +2,15 @@
 # `datawizard`: Easy Data Wrangling and Statistical Transformations <img src='man/figures/logo.png' align="right" height="139" />
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.04684/status.svg)](https://doi.org/10.21105/joss.04684)
-[![downloads](http://cranlogs.r-pkg.org/badges/datawizard)](https://cran.r-project.org/package=datawizard)
+[![downloads](https://cranlogs.r-pkg.org/badges/datawizard)](https://cran.r-project.org/package=datawizard)
 [![total](https://cranlogs.r-pkg.org/badges/grand-total/datawizard)](https://cranlogs.r-pkg.org/)
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 <!-- ***:sparkles: Hockety pockety wockety wack, prepare this data forth and back*** -->
+
 <!-- ***Hockety pockety wockety wock, messy data is in shock*** -->
+
 <!-- ***Hockety pockety wockety woss, you can cite i-it from JOSS*** <sup>(soon)</sup> -->
+
 <!-- ***Hockety pockety wockety wass, datawizard saves your ass! :sparkles:*** -->
 
 `{datawizard}` is a lightweight package to easily manipulate, clean,
@@ -46,8 +48,9 @@ It covers two aspects of data preparation:
 # Installation
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/datawizard)](https://cran.r-project.org/package=datawizard)
-[![insight status
+[![datawizard status
 badge](https://easystats.r-universe.dev/badges/datawizard)](https://easystats.r-universe.dev)
+[![codecov](https://codecov.io/gh/easystats/datawizard/branch/main/graph/badge.svg)](https://app.codecov.io/gh/easystats/datawizard)
 [![R-CMD-check](https://github.com/easystats/datawizard/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/easystats/datawizard/actions)
 
 | Type | Source | Command |
@@ -90,6 +93,10 @@ A BibTeX entry for LaTeX users is
 ```
 
 # Features
+
+[![Documentation](https://img.shields.io/badge/documentation-datawizard-orange.svg?colorB=E91E63)](https://easystats.github.io/datawizard/)
+[![Blog](https://img.shields.io/badge/blog-easystats-orange.svg?colorB=FF9800)](https://easystats.github.io/blog/posts/)
+[![Features](https://img.shields.io/badge/features-datawizard-orange.svg?colorB=2196F3)](https://easystats.github.io/datawizard/reference/index.html)
 
 Most courses and tutorials about statistical modeling assume that you
 are working with a clean and tidy dataset. In practice, however, a major
@@ -136,9 +143,6 @@ columns, can be achieved using `extract_column_names()` or
 # find column names matching a pattern
 extract_column_names(iris, starts_with("Sepal"))
 #> [1] "Sepal.Length" "Sepal.Width"
-```
-
-``` r
 
 # return data columns matching a pattern
 data_select(iris, starts_with("Sepal")) |> head()
@@ -157,9 +161,6 @@ It is also possible to extract one or more variables:
 # single variable
 data_extract(mtcars, "gear")
 #>  [1] 4 4 4 3 3 3 3 4 4 4 4 3 3 3 3 3 3 4 4 4 3 3 3 3 3 4 5 5 5 5 5 4
-```
-
-``` r
 
 # more variables
 head(data_extract(iris, ends_with("Width")))
@@ -220,17 +221,11 @@ x
 #> 1 1 a 5  1
 #> 2 2 b 6  2
 #> 3 3 c 7  3
-```
-
-``` r
 y
 #>   c d   e id
 #> 1 6 f 100  2
 #> 2 7 g 101  3
 #> 3 8 h 102  4
-```
-
-``` r
 
 data_merge(x, y, join = "full")
 #>    a    b c id    d   e
@@ -238,50 +233,32 @@ data_merge(x, y, join = "full")
 #> 1  2    b 6  2    f 100
 #> 2  3    c 7  3    g 101
 #> 4 NA <NA> 8  4    h 102
-```
-
-``` r
 
 data_merge(x, y, join = "left")
 #>   a b c id    d   e
 #> 3 1 a 5  1 <NA>  NA
 #> 1 2 b 6  2    f 100
 #> 2 3 c 7  3    g 101
-```
-
-``` r
 
 data_merge(x, y, join = "right")
 #>    a    b c id d   e
 #> 1  2    b 6  2 f 100
 #> 2  3    c 7  3 g 101
 #> 3 NA <NA> 8  4 h 102
-```
-
-``` r
 
 data_merge(x, y, join = "semi", by = "c")
 #>   a b c id
 #> 2 2 b 6  2
 #> 3 3 c 7  3
-```
-
-``` r
 
 data_merge(x, y, join = "anti", by = "c")
 #>   a b c id
 #> 1 1 a 5  1
-```
-
-``` r
 
 data_merge(x, y, join = "inner")
 #>   a b c id d   e
 #> 1 2 b 6  2 f 100
 #> 2 3 c 7  3 g 101
-```
-
-``` r
 
 data_merge(x, y, join = "bind")
 #>    a    b c id    d   e
@@ -352,22 +329,13 @@ tmp
 #> 3  3  3 NA  3
 #> 4 NA NA NA NA
 #> 5  5  5 NA  5
-```
-
-``` r
 
 # indices of empty columns or rows
 empty_columns(tmp)
 #> c 
 #> 3
-```
-
-``` r
 empty_rows(tmp)
 #> [1] 4
-```
-
-``` r
 
 # remove empty columns or rows
 remove_empty_columns(tmp)
@@ -377,18 +345,12 @@ remove_empty_columns(tmp)
 #> 3  3  3  3
 #> 4 NA NA NA
 #> 5  5  5  5
-```
-
-``` r
 remove_empty_rows(tmp)
 #>   a  b  c  d
 #> 1 1  1 NA  1
 #> 2 2 NA NA NA
 #> 3 3  3 NA  3
 #> 5 5  5 NA  5
-```
-
-``` r
 
 # remove empty columns and rows
 remove_empty(tmp)
@@ -409,9 +371,6 @@ table(x)
 #> x
 #>  1  2  3  4  5  6  7  8  9 10 
 #>  2  3  5  3  7  5  5  2 11  7
-```
-
-``` r
 
 # cut into 3 groups, based on distribution (quantiles)
 table(categorize(x, split = "quantile", n_groups = 3))
@@ -445,9 +404,6 @@ summary(swiss)
 #>  Mean   : 41.144   Mean   :19.94   
 #>  3rd Qu.: 93.125   3rd Qu.:21.70   
 #>  Max.   :100.000   Max.   :26.60
-```
-
-``` r
 
 # after
 summary(standardize(swiss))
@@ -486,9 +442,6 @@ anscombe
 #> 9  12 12 12  8 10.84 9.13  8.15  5.56
 #> 10  7  7  7  8  4.82 7.26  6.42  7.91
 #> 11  5  5  5  8  5.68 4.74  5.73  6.89
-```
-
-``` r
 
 # after
 winsorize(anscombe)
@@ -540,9 +493,6 @@ head(trees)
 #> 4  10.5     72   16.4
 #> 5  10.7     81   18.8
 #> 6  10.8     83   19.7
-```
-
-``` r
 
 # after
 head(ranktransform(trees))
@@ -575,9 +525,6 @@ x
 #> Mazda RX4     21.0   6  160 110
 #> Mazda RX4 Wag 21.0   6  160 110
 #> Datsun 710    22.8   4  108  93
-```
-
-``` r
 
 data_rotate(x)
 #>      Mazda RX4 Mazda RX4 Wag Datsun 710

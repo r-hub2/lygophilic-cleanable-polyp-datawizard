@@ -2,7 +2,6 @@
 % Please edit documentation in R/text_format.R
 \name{text_format}
 \alias{text_format}
-\alias{format_text}
 \alias{text_fullstop}
 \alias{text_lastchar}
 \alias{text_concatenate}
@@ -12,15 +11,6 @@
 \title{Convenient text formatting functionalities}
 \usage{
 text_format(
-  text,
-  sep = ", ",
-  last = " and ",
-  width = NULL,
-  enclose = NULL,
-  ...
-)
-
-format_text(
   text,
   sep = ", ",
   last = " and ",
@@ -60,10 +50,7 @@ text elements will not be enclosed.}
 
 \item{n}{The number of characters to find.}
 
-\item{pattern}{Character vector. For \code{data_rename()}, indicates columns that
-should be selected for renaming. Can be \code{NULL} (in which case all columns
-are selected). For \code{data_addprefix()} or \code{data_addsuffix()}, a character
-string, which will be added as prefix or suffix to the column names.}
+\item{pattern}{Regex pattern to remove from \code{text}.}
 }
 \value{
 A character string.

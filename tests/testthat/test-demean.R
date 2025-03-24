@@ -8,13 +8,13 @@ test_that("demean works", {
   df$binary <- as.factor(rbinom(150, 1, 0.35)) # binary variable
 
   set.seed(123)
-  x <- demean(df, select = c("Sepal.Length", "Petal.Length"), by = "ID")
+  x <- demean(df, select = c("Sepal.Length", "Petal.Length"), by = "ID", append = FALSE)
   expect_snapshot(head(x))
 
   set.seed(123)
   expect_message(
     {
-      x <- demean(df, select = c("Sepal.Length", "binary", "Species"), by = "ID")
+      x <- demean(df, select = c("Sepal.Length", "binary", "Species"), by = "ID", append = FALSE)
     },
     "have been coerced to numeric"
   )
@@ -23,17 +23,35 @@ test_that("demean works", {
   set.seed(123)
   expect_message(
     {
-      y <- demean(df, select = ~ Sepal.Length + binary + Species, by = ~ID)
+      y <- demean(df, select = ~ Sepal.Length + binary + Species, by = ~ID, append = FALSE)
     },
     "have been coerced to numeric"
   )
   expect_message(
     {
-      z <- demean(df, select = c("Sepal.Length", "binary", "Species"), by = "ID")
+      z <- demean(df, select = c("Sepal.Length", "binary", "Species"), by = "ID", append = FALSE)
     },
     "have been coerced to numeric"
   )
   expect_identical(y, z)
+
+  set.seed(123)
+  x <- demean(df, select = c("Sepal.Length", "Petal.Length"), by = "ID")
+  expect_named(
+    x,
+    c(
+      "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width",
+      "Species", "ID", "binary", "Sepal.Length_between", "Petal.Length_between",
+      "Sepal.Length_within", "Petal.Length_within"
+    )
+  )
+  expect_snapshot(head(x))
+
+  df$Sepal.Length_within <- df$Sepal.Length
+  expect_error(
+    demean(df, select = c("Sepal.Length", "Petal.Length"), by = "ID"),
+    regex = "One or more of"
+  )
 })
 
 test_that("demean interaction term", {
@@ -45,7 +63,7 @@ test_that("demean interaction term", {
   )
 
   set.seed(123)
-  expect_snapshot(demean(dat, select = c("a", "x*y"), by = "ID"))
+  expect_snapshot(demean(dat, select = c("a", "x*y"), by = "ID", append = FALSE))
 })
 
 test_that("demean shows message if some vars don't exist", {
@@ -183,5 +201,48 @@ test_that("demean, sanity checks", {
       suffix_demean = "_within"
     ),
     regex = "Variables \"neg_c_8\" and \"c173code\" were not found"
+  )
+})
+
+
+test_that("demean for nested designs (by > 1), nested = TRUE", {
+  data(efc, package = "datawizard")
+  dat <- na.omit(efc)
+  dat$e42dep <- factor(dat$e42dep)
+  dat$c172code <- factor(dat$c172code)
+
+  x_ijk <- dat$c12hour
+  xbar_k <- ave(x_ijk, dat$e42dep, FUN = mean)
+  xbar_jk <- ave(x_ijk, dat$e42dep, dat$c172code, FUN = mean)
+
+  L3_between <- xbar_k
+  L2_between <- xbar_jk - xbar_k
+  L1_within <- x_ijk - xbar_jk
+
+  out <- degroup(
+    dat,
+    select = "c12hour",
+    by = c("e42dep", "c172code"),
+    nested = TRUE,
+    suffix_demean = "_within"
+  )
+
+  expect_equal(
+    out$c12hour_within,
+    L1_within,
+    tolerance = 1e-4,
+    ignore_attr = TRUE
+  )
+  expect_equal(
+    out$c12hour_e42dep_between,
+    L3_between,
+    tolerance = 1e-4,
+    ignore_attr = TRUE
+  )
+  expect_equal(
+    out$c12hour_c172code_between,
+    L2_between,
+    tolerance = 1e-4,
+    ignore_attr = TRUE
   )
 })
